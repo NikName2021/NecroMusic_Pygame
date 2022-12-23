@@ -13,11 +13,11 @@ class Game:
 
     def run(self):
         running = True
+        self.level.update()
         while running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
-            self.level.update()
             self.level.run()
             pygame.display.update()
             self.clock.tick(60)
