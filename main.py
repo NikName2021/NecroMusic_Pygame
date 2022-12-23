@@ -18,7 +18,10 @@ class Game:
                 if event.type == pygame.QUIT:
                     running = False
             self.level.update()
+            self.level.run()
             pygame.display.update()
+            self.clock.tick(60)
+
 
 
 if __name__ == '__main__':
