@@ -3,7 +3,6 @@ import pytmx
 from main_functions import *
 from settings import *
 
-
 all_sprites = pygame.sprite.Group()
 floor = pygame.sprite.Group()
 wall = pygame.sprite.Group()
@@ -17,7 +16,7 @@ class Tile(pygame.sprite.Sprite):
             TILESIZE * pos_x, TILESIZE * pos_y)
 
 
-class Level():
+class Level:
     def __init__(self, main_window):
         pygame.init()
         self.gameMap = pytmx.load_pygame("main_map.tmx")
