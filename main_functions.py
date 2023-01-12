@@ -8,7 +8,7 @@ def import_csv_layout(path):
         return [list(row) for row in layout]
 
 
-def load_image(name, colorkey=-1):
+def load_image(name, colorkey=None):
     fullname = os.path.join('tiles', name)
     if not os.path.isfile(fullname):
         print(f"Файл с изображением '{fullname}' не найден")

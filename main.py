@@ -6,20 +6,15 @@ from main_functions import load_image
 
 
 player_sprite = pygame.sprite.Group()
+mob_sprite = pygame.sprite.Group()
 
 
-class Camera:
-    def __init__(self):
-        self.dx = 0
-        self.dy = 0
-
-    def apply(self, obj):
-        obj.rect.x += self.dx
-        obj.rect.y += self.dy
-
-    def update(self, target):
-        self.dx = -(target.rect.x + target.rect.w // 2 - WIDTH // 2)
-        self.dy = -(target.rect.y + target.rect.h // 2 - HEIGHT // 2)
+def repos(lx, nx, ly, ny):
+    dx = nx - lx
+    dy = ny - ly
+    for sprite in all_sprites:
+        sprite.rect.x -= dx
+        sprite.rect.y -= dy
 
 
 class AnimatedSprite(pygame.sprite.Sprite):
@@ -27,7 +22,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
         super().__init__(sprite_group)
         self.frames = []
         for i in range(startpos, endpos + 1):
-            self.frames.append(load_image(f'{i}.jpg'))
+            self.frames.append(load_image(f'{i}.png'))
         self.cur_frame = 0
         self.image = self.frames[self.cur_frame]
         self.pos_x = 0
@@ -56,6 +51,9 @@ class AnimatedSprite(pygame.sprite.Sprite):
             self.pos_y = last_pos_y
             self.rect.x = last_rect_x
             self.rect.y = last_rect_y
+        repos(last_rect_x, self.rect.x, last_rect_y, self.rect.y)
+        self.rect.x = last_rect_x
+        self.rect.y = last_rect_y
 
     def update(self):
         self.handle_keys()
@@ -71,7 +69,6 @@ class Game:
         self.level = Level(self.display)
 
     def run(self):
-        camera = Camera()
         player = AnimatedSprite(40, 47, player_sprite)
         player.rect = player.image.get_rect()
         player_sprite.add(player)
@@ -148,17 +145,12 @@ class Game:
                 if event.type == pygame.QUIT:
                     running = False
             player_sprite.update()
+            mob_sprite.update()
             self.display.fill((0, 0, 0))
             self.level.run()
             player_sprite.draw(self.display)
-            for sprite in all_sprites:
-                camera.apply(sprite)
-            for sprite in floor:
-                camera.apply(sprite)
-            for sprite in wall:
-                camera.apply(sprite)
+            mob_sprite.draw(self.display)
             pygame.display.flip()
-            camera.update(player)
             self.clock.tick(15)
 
 

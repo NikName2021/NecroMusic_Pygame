@@ -34,7 +34,7 @@ class Level:
     def load_all_image(self):
         images = {}
         for i in range(0, 1024):
-            images[i] = load_image(f'{i}.jpg', (0, 0, 0))
+            images[i] = load_image(f'{i}.png', (0, 0, 0))
         return images
 
     def update(self):
