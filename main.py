@@ -1,8 +1,9 @@
 import pygame
 
 from settings import *
-from Level import Level, floor, wall, all_sprites
-from main_functions import load_image, import_csv_layout
+from Level import Level, floor, wall, danger_blocks, all_sprites
+from main_functions import load_image, import_csv_layout, file_difficulty
+from Sound import Sound
 
 pygame.init()
 
