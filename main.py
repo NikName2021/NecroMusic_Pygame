@@ -1,13 +1,14 @@
 import pygame
 
 from settings import *
-from Level import Level, floor, wall, all_sprites
-from main_functions import load_image, import_csv_layout
-
+from Level import Level, floor, wall, danger_blocks, all_sprites
+from main_functions import load_image, import_csv_layout, file_difficulty
+from Sound import Sound
 pygame.init()
 
 player_sprite = pygame.sprite.Group()
 mob_sprite = pygame.sprite.Group()
+damage = pygame.mixer.Sound('layouts/hit3.mp3')
 
 
 def repos(lx, nx, ly, ny):
@@ -28,8 +29,10 @@ class PlayerMovableSprite(pygame.sprite.Sprite):
         self.image = self.frames[self.cur_frame]
         self.pos_x = 0
         self.pos_y = 0
-        self.lives = 3
+        self.lives = file_difficulty()
         self.money = 0
+        self.event = True
+        self.points = 0
 
     def handle_keys(self):
         key = pygame.key.get_pressed()
@@ -54,6 +57,14 @@ class PlayerMovableSprite(pygame.sprite.Sprite):
             self.pos_y = last_pos_y
             self.rect.x = last_rect_x
             self.rect.y = last_rect_y
+        if pygame.sprite.spritecollideany(self, danger_blocks) and self.event:
+            self.lives -= 1
+            damage.play()
+            self.points -= NEGATIVE_FOR_BLOCK
+            self.event = False
+        if not pygame.sprite.spritecollideany(self, danger_blocks):
+            self.event = True
+
         repos(last_rect_x, self.rect.x, last_rect_y, self.rect.y)
         self.rect.x = last_rect_x
         self.rect.y = last_rect_y
@@ -83,9 +94,11 @@ class AnimatedMobSprite(pygame.sprite.Sprite):
 class Game:
     def __init__(self):
         pygame.init()
+        self.running = True
         self.display = pygame.display.set_mode((WIDTH, HEIGHT))
         self.clock = pygame.time.Clock()
         self.level = Level(self.display)
+        self.music = Sound()
 
     def run(self):
         player = PlayerMovableSprite(40, 47, player_sprite)
@@ -171,21 +184,22 @@ class Game:
                     mob_sprite.add(mob)
                     all_sprites.add(mob)
         mob_sprite.draw(self.display)
-        
-        running = True
+
         self.level.update()
         self.level.run()
         player_sprite.draw(self.display)
         pygame.display.flip()
         heart = load_image('530.png')
         coin = load_image('629.png')
-        pygame.mixer.music.load("sounds/bg2.mp3")
-        pygame.mixer.music.play(-1)
-        while running:
+        while self.running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    running = False
-                    
+                    self.running = False
+                    self.music.stop()
+            if player.lives == 0:
+                self.music.stop()
+                return 1 
+
             player_sprite.update()
             mob_sprite.update()
             self.display.fill((0, 0, 0))
@@ -203,8 +217,14 @@ class Game:
             self.display.blit(coin, (32+text1_w, 0))
             self.display.blit(text2, (64+text1_w, 0))
 
+            points = font.render(str(player.points), True, (255, 255, 255))
+            self.display.blit(points, (WIDTH - 64, 5))
+
             pygame.display.flip()
             self.clock.tick(15)
+            
+    def display_clear(self):
+        self.display.fill('BLACK')
 
 
 if __name__ == '__main__':

@@ -7,6 +7,7 @@ from settings import *
 all_sprites = pygame.sprite.Group()
 floor = pygame.sprite.Group()
 wall = pygame.sprite.Group()
+danger_blocks = pygame.sprite.Group()
 
 
 class Tile(pygame.sprite.Sprite):
@@ -17,27 +18,17 @@ class Tile(pygame.sprite.Sprite):
             TILESIZE * pos_x, TILESIZE * pos_y)
 
 
-class Sound:
-    def __init__(self):
-        pygame.mixer.music.load('laouts/necrotic_music.mp3')
-        pygame.mixer.music.play()
-
-    def stop(self):
-        pygame.mixer.music.stop()
-
-
 class Level:
     def __init__(self, main_window):
         self.window = main_window
         self.layouts = self.create_map()
         self.images = self.load_all_image()
 
-        music = Sound()
-
     def create_map(self):
         layouts = {
             'floor': (import_csv_layout('level/main_map1_Floor.csv'), floor),
-            'wall': (import_csv_layout('level/main_map1_Walls.csv'), wall)
+            'wall': (import_csv_layout('level/main_map1_Walls.csv'), wall),
+            'danger': (import_csv_layout('level/main_map1_Danger.csv'), danger_blocks)
         }
         return layouts
 
@@ -58,12 +49,4 @@ class Level:
     def run(self):
         floor.draw(self.window)
         wall.draw(self.window)
-
-
-    # def update(self):
-    #     for layer in self.gameMap.visible_layers:
-    #         if isinstance(layer, pytmx.TiledTileLayer):
-    #             for x, y, gid, in layer:
-    #                 tile = self.gameMap.get_tile_image_by_gid(gid)
-    #                 if tile:
-    #                     self.window.blit(tile, (x * self.gameMap.tilewidth, y * self.gameMap.tileheight))
+        danger_blocks.draw(self.window)

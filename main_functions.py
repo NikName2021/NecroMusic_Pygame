@@ -8,8 +8,8 @@ def import_csv_layout(path):
         return [list(row) for row in layout]
 
 
-def load_image(name, colorkey=None):
-    fullname = os.path.join('tiles', name)
+def load_image(name, colorkey=None, path='tiles'):
+    fullname = os.path.join(path, name)
     if not os.path.isfile(fullname):
         print(f"Файл с изображением '{fullname}' не найден")
         sys.exit()
@@ -25,3 +25,11 @@ def load_image(name, colorkey=None):
         image = image.convert_alpha()
     # pygame.image.save(image, "out_test/image.jpg")
     return image
+
+
+def file_difficulty():
+    with open('setting.txt', 'r', encoding='UTF-8') as file:
+        dif = int(file.readline())
+    return dif
+
+
