@@ -179,7 +179,7 @@ class Game:
         pygame.display.flip()
         heart = load_image('530.png')
         coin = load_image('629.png')
-        pygame.mixer.music.load("sounds/bg2.mp3")
+        pygame.mixer.music.load("laouts/necrotic_music.mp3")
         pygame.mixer.music.play(-1)
         while running:
             for event in pygame.event.get():
