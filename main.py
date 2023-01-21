@@ -4,6 +4,8 @@ from settings import *
 from Level import Level, floor, wall, all_sprites
 from main_functions import load_image, import_csv_layout
 
+pygame.init()
+
 player_sprite = pygame.sprite.Group()
 mob_sprite = pygame.sprite.Group()
 
@@ -156,6 +158,7 @@ class Game:
         mobs_file = import_csv_layout('level/main_map1_Mobs.csv')
         mobs_dict = dict(m1=(168, 176), m2=(296, 304), m3=(488, 496), m4=(695, 702), m5=(251, 254), m6=(627, 629),
                          m7=(183, 190), m8=(530, 532))
+        
         for i in range(len(mobs_file)):
             for j in range(len(mobs_file[i])):
                 if player.pos_x != i and player.pos_y != j and mobs_file[i][j] in mobs_dict.keys():
@@ -168,6 +171,7 @@ class Game:
                     mob_sprite.add(mob)
                     all_sprites.add(mob)
         mob_sprite.draw(self.display)
+        
         running = True
         self.level.update()
         self.level.run()
@@ -181,6 +185,7 @@ class Game:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
+                    
             player_sprite.update()
             mob_sprite.update()
             self.display.fill((0, 0, 0))

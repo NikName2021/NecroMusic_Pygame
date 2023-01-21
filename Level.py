@@ -3,6 +3,7 @@ import pytmx
 from main_functions import *
 from settings import *
 
+
 all_sprites = pygame.sprite.Group()
 floor = pygame.sprite.Group()
 wall = pygame.sprite.Group()
@@ -16,13 +17,22 @@ class Tile(pygame.sprite.Sprite):
             TILESIZE * pos_x, TILESIZE * pos_y)
 
 
+class Sound:
+    def __init__(self):
+        pygame.mixer.music.load('laouts/necrotic_music.mp3')
+        pygame.mixer.music.play()
+
+    def stop(self):
+        pygame.mixer.music.stop()
+
+
 class Level:
     def __init__(self, main_window):
-        pygame.init()
-        self.gameMap = pytmx.load_pygame("main_map.tmx")
         self.window = main_window
         self.layouts = self.create_map()
         self.images = self.load_all_image()
+
+        music = Sound()
 
     def create_map(self):
         layouts = {
