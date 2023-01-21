@@ -1,9 +1,10 @@
 import pygame
 
 from settings import *
-from Level import Level, floor, wall, danger_blocks, all_sprites
+from Level import Level, floor, wall, danger_blocks, health, all_sprites
 from main_functions import load_image, import_csv_layout, file_difficulty
 from Sound import Sound
+from Header import Header
 
 pygame.init()
 
@@ -25,9 +26,10 @@ def pos_check(sprite):
     m = [(sprite.pos_x - 1, sprite.pos_y - 1), (sprite.pos_x - 1, sprite.pos_y), (sprite.pos_x - 1, sprite.pos_y + 1),
          (sprite.pos_x, sprite.pos_y + 1), (sprite.pos_x + 1, sprite.pos_y + 1), (sprite.pos_x + 1, sprite.pos_y),
          (sprite.pos_x + 1, sprite.pos_y - 1), (sprite.pos_x, sprite.pos_y - 1)]
-    for i in m:
-        if str(mobs_file[i[0]][i[1]][0]) == 'm':
-            sprite.lives -= 1
+    # for i in m:
+    #     print('err')
+        # if str(mobs_file[i[0]][i[1]][0]) == 'm':
+        #     sprite.lives -= 1
 
 
 class PlayerMovableSprite(pygame.sprite.Sprite):
@@ -75,6 +77,24 @@ class PlayerMovableSprite(pygame.sprite.Sprite):
             self.event = False
         if not pygame.sprite.spritecollideany(self, danger_blocks):
             self.event = True
+        if pygame.sprite.spritecollideany(self, health):
+            try:
+                id_sprite = pygame.sprite.spritecollide(self, health, True)[0].id_image
+                if id_sprite == BLUE_HEALTH[0]:
+                    self.points += BLUE_HEALTH[1]
+                elif id_sprite == ONE_HEARD[0]:
+                    self.lives += ONE_HEARD[1]
+                elif id_sprite == CHEST[0]:
+                    self.points += CHEST[1]
+                elif id_sprite == YELLOW_HEALTH[0]:
+                    self.points += YELLOW_HEALTH[1]
+                elif id_sprite == GREEN_HEALTH[0]:
+                    self.points += GREEN_HEALTH[1]
+                elif id_sprite == HALF_HEARD[0]:
+                    self.lives += HALF_HEARD[1]
+
+            except Exception as ex:
+                print(ex)
 
         repos(last_rect_x, self.rect.x, last_rect_y, self.rect.y)
         self.rect.x = last_rect_x
@@ -116,6 +136,7 @@ class Game:
 
     def run(self):
         player = PlayerMovableSprite(40, 47, player_sprite)
+        header = Header(player, self.display)
         player.rect = player.image.get_rect()
         player_sprite.add(player)
         pos_x = WIDTH // TILESIZE
@@ -197,22 +218,25 @@ class Game:
                     mob_sprite.add(mob)
                     all_sprites.add(mob)
         mob_sprite.draw(self.display)
-        
-        running = True
+
         self.level.update()
         self.level.run()
         player_sprite.draw(self.display)
         pygame.display.flip()
-        heart = load_image('530.png')
-        coin = load_image('629.png')
+
         while self.running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
                     self.music.stop()
             if player.lives == 0:
+                # pic = load_image('game_over.png', path='layouts')
+                # self.display.blit(pygame.transform.scale(pic, (WIDTH, HEIGHT)), (0, 0))
+                # pygame.display.flip()
+                self.display.fill((0, 0, 0))
+                pygame.display.flip()
                 self.music.stop()
-                return 1 
+                return 1
 
             player_sprite.update()
             mob_sprite.update()
@@ -220,23 +244,10 @@ class Game:
             self.level.run()
             player_sprite.draw(self.display)
             mob_sprite.draw(self.display)
-
-            font = pygame.font.Font(None, 50)
-            text1 = font.render(str(player.lives), True, (255, 255, 255))
-            text1_w = text1.get_width()
-            text1_h = text1.get_height()
-            self.display.blit(heart, (0, 0))
-            self.display.blit(text1, (32, 0))
-            text2 = font.render(str(player.money), True, (255, 255, 255))
-            self.display.blit(coin, (32+text1_w, 0))
-            self.display.blit(text2, (64+text1_w, 0))
-
-            points = font.render(str(player.points), True, (255, 255, 255))
-            self.display.blit(points, (WIDTH - 64, 5))
-
+            header.draw(self.display)
             pygame.display.flip()
             self.clock.tick(15)
-            
+
     def display_clear(self):
         self.display.fill('BLACK')
 

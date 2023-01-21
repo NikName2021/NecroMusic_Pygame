@@ -8,14 +8,16 @@ all_sprites = pygame.sprite.Group()
 floor = pygame.sprite.Group()
 wall = pygame.sprite.Group()
 danger_blocks = pygame.sprite.Group()
+health = pygame.sprite.Group()
 
 
 class Tile(pygame.sprite.Sprite):
-    def __init__(self, tile_type, image, pos_x, pos_y):
+    def __init__(self, tile_type, image, pos_x, pos_y, id_image=0):
         super().__init__(tile_type, all_sprites)
         self.image = image
         self.rect = self.image.get_rect().move(
             TILESIZE * pos_x, TILESIZE * pos_y)
+        self.id_image = int(id_image)
 
 
 class Level:
@@ -28,7 +30,8 @@ class Level:
         layouts = {
             'floor': (import_csv_layout('level/main_map1_Floor.csv'), floor),
             'wall': (import_csv_layout('level/main_map1_Walls.csv'), wall),
-            'danger': (import_csv_layout('level/main_map1_Danger.csv'), danger_blocks)
+            'danger': (import_csv_layout('level/main_map1_Danger.csv'), danger_blocks),
+            'health': (import_csv_layout('level/main_map1_Points_and_Health.csv'), health)
         }
         return layouts
 
@@ -44,9 +47,10 @@ class Level:
                 for q, m in enumerate(g):
                     if m != '-1':
                         image = self.images[int(m)]
-                        Tile(j[1], image,  q, n)
+                        Tile(j[1], image,  q, n, m)
 
     def run(self):
         floor.draw(self.window)
         wall.draw(self.window)
         danger_blocks.draw(self.window)
+        health.draw(self.window)
