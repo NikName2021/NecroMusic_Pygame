@@ -8,6 +8,7 @@ pygame.init()
 
 player_sprite = pygame.sprite.Group()
 mob_sprite = pygame.sprite.Group()
+mobs_file = import_csv_layout('level/main_map1_Mobs.csv')
 
 
 def repos(lx, nx, ly, ny):
@@ -16,6 +17,15 @@ def repos(lx, nx, ly, ny):
     for sprite in all_sprites:
         sprite.rect.x -= dx
         sprite.rect.y -= dy
+
+
+def pos_check(sprite):
+    m = [(sprite.pos_x - 1, sprite.pos_y - 1), (sprite.pos_x - 1, sprite.pos_y), (sprite.pos_x - 1, sprite.pos_y + 1),
+         (sprite.pos_x, sprite.pos_y + 1), (sprite.pos_x + 1, sprite.pos_y + 1), (sprite.pos_x + 1, sprite.pos_y),
+         (sprite.pos_x + 1, sprite.pos_y - 1), (sprite.pos_x, sprite.pos_y - 1)]
+    for i in m:
+        if str(mobs_file[i[0]][i[1]][0]) == 'm':
+            sprite.lives -= 1
 
 
 class PlayerMovableSprite(pygame.sprite.Sprite):
@@ -49,7 +59,7 @@ class PlayerMovableSprite(pygame.sprite.Sprite):
         elif key[pygame.K_LEFT]:
             self.pos_x -= 1
             self.rect.x -= TILESIZE
-        if (not pygame.sprite.spritecollideany(self, floor)) or (pygame.sprite.spritecollideany(self, mob_sprite)):
+        if (not pygame.sprite.spritecollideany(self, floor)) or pygame.sprite.spritecollideany(self, mob_sprite):
             self.pos_x = last_pos_x
             self.pos_y = last_pos_y
             self.rect.x = last_rect_x
@@ -62,6 +72,7 @@ class PlayerMovableSprite(pygame.sprite.Sprite):
         self.handle_keys()
         self.cur_frame = (self.cur_frame + 1) % len(self.frames)
         self.image = self.frames[self.cur_frame]
+        pos_check(self)
 
 
 class AnimatedMobSprite(pygame.sprite.Sprite):
@@ -78,6 +89,8 @@ class AnimatedMobSprite(pygame.sprite.Sprite):
     def update(self):
         self.cur_frame = (self.cur_frame + 1) % len(self.frames)
         self.image = self.frames[self.cur_frame]
+        if pygame.sprite.spritecollideany(self, player_sprite):
+            print(123)
 
 
 class Game:
@@ -155,7 +168,6 @@ class Game:
             player.pos_y = cy
         player.rect.x = player.pos_x * TILESIZE
         player.rect.y = player.pos_y * TILESIZE
-        mobs_file = import_csv_layout('level/main_map1_Mobs.csv')
         mobs_dict = dict(m1=(168, 176), m2=(296, 304), m3=(488, 496), m4=(695, 702), m5=(251, 254), m6=(627, 629),
                          m7=(183, 190), m8=(530, 532))
         
@@ -185,14 +197,12 @@ class Game:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
-                    
             player_sprite.update()
             mob_sprite.update()
             self.display.fill((0, 0, 0))
             self.level.run()
             player_sprite.draw(self.display)
             mob_sprite.draw(self.display)
-
             font = pygame.font.Font(None, 50)
             text1 = font.render(str(player.lives), True, (255, 255, 255))
             text1_w = text1.get_width()
