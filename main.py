@@ -247,7 +247,7 @@ class Game:
         mob_sprite.draw(self.display)
 
         count = False
-
+        reset = True
         self.level.update()
         self.level.run()
         player_sprite.draw(self.display)
@@ -265,33 +265,38 @@ class Game:
                             player.points += NEGATIVE_FOR_BLOCK
 
             if len(mob_sprite.sprites()) == 0:
-                for i in all_sprites:
-                    i.kill()
-                self.display.fill((0, 0, 0))
+                if reset:
+                    self.display_clear()
+                pic = load_image('game_over.png', path='layouts')
+                self.display.blit(pygame.transform.scale(pic, (WIDTH, HEIGHT)), (0, 0))
                 pygame.display.flip()
                 self.music.stop()
-                return 1
+                reset = False
 
             if player.lives == 0:
-                for i in all_sprites:
-                    i.kill()
-                self.display.fill((0, 0, 0))
+                if reset:
+                    self.display_clear()
+                pic = load_image('game_over.png', path='layouts')
+                self.display.blit(pygame.transform.scale(pic, (WIDTH, HEIGHT)), (0, 0))
                 pygame.display.flip()
                 self.music.stop()
-                return 1 
-
-            player_sprite.update()
-            mob_sprite.update()
-            self.display.fill((0, 0, 0))
-            self.level.run()
-            player_sprite.draw(self.display)
-            mob_sprite.draw(self.display)
-            header.draw(self.display)
-            pygame.display.flip()
-            self.clock.tick(15)
+                reset = False
+            else:
+                player_sprite.update()
+                mob_sprite.update()
+                self.display.fill((0, 0, 0))
+                self.level.run()
+                player_sprite.draw(self.display)
+                mob_sprite.draw(self.display)
+                header.draw(self.display)
+                pygame.display.flip()
+                self.clock.tick(15)
 
     def display_clear(self):
-        self.display.fill('BLACK')
+        for i in all_sprites:
+            i.kill()
+        self.display.fill((0, 0, 0))
+        pygame.display.flip()
 
 
 if __name__ == '__main__':
