@@ -23,5 +23,5 @@ def load_image(name, colorkey=None):
         image.set_colorkey(colorkey)
     else:
         image = image.convert_alpha()
-    pygame.image.save(image, "out_test/image.jpg")
+    # pygame.image.save(image, "out_test/image.jpg")
     return image

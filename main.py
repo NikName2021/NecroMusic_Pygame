@@ -4,7 +4,7 @@ from settings import *
 from Level import Level, floor, wall, all_sprites
 from main_functions import load_image
 
-
+pygame.init()
 player_sprite = pygame.sprite.Group()
 mob_sprite = pygame.sprite.Group()
 
@@ -136,6 +136,8 @@ class Game:
             player.pos_y = cy
         player.rect.x = player.pos_x * TILESIZE
         player.rect.y = player.pos_y * TILESIZE
+        
+        
         running = True
         self.level.update()
         self.level.run()
@@ -144,6 +146,7 @@ class Game:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
+                    
             player_sprite.update()
             mob_sprite.update()
             self.display.fill((0, 0, 0))
