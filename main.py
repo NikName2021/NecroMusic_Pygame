@@ -6,6 +6,7 @@ from Level import Level, floor, wall, danger_blocks, health, all_sprites
 from main_functions import load_image, import_csv_layout, file_difficulty
 from Sound import Sound
 from Header import Header
+from connection import con, cur
 
 pygame.init()
 
@@ -267,7 +268,8 @@ class Game:
             if len(mob_sprite.sprites()) == 0:
                 if reset:
                     self.display_clear()
-                pic = load_image('game_over.png', path='layouts')
+                    self.save_result(player)
+                pic = load_image('winner.jpg', path='layouts')
                 self.display.blit(pygame.transform.scale(pic, (WIDTH, HEIGHT)), (0, 0))
                 pygame.display.flip()
                 self.music.stop()
@@ -276,6 +278,7 @@ class Game:
             if player.lives == 0:
                 if reset:
                     self.display_clear()
+                    self.save_result(player)
                 pic = load_image('game_over.png', path='layouts')
                 self.display.blit(pygame.transform.scale(pic, (WIDTH, HEIGHT)), (0, 0))
                 pygame.display.flip()
@@ -293,10 +296,16 @@ class Game:
                 self.clock.tick(15)
 
     def display_clear(self):
-        for i in all_sprites:
-            i.kill()
         self.display.fill((0, 0, 0))
         pygame.display.flip()
+
+    def killer(self):
+        for i in all_sprites:
+            i.kill()
+
+    def save_result(self, player):
+        cur.execute("INSERT INTO games(result) VALUES(?)", (player.points,))
+        con.commit()
 
 
 if __name__ == '__main__':
