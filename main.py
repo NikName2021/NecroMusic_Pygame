@@ -2,9 +2,10 @@ import pygame
 
 from settings import *
 from Level import Level, floor, wall, all_sprites
-from main_functions import load_image
+from main_functions import load_image, import_csv_layout
 
 pygame.init()
+
 player_sprite = pygame.sprite.Group()
 mob_sprite = pygame.sprite.Group()
 
@@ -17,7 +18,7 @@ def repos(lx, nx, ly, ny):
         sprite.rect.y -= dy
 
 
-class AnimatedSprite(pygame.sprite.Sprite):
+class PlayerMovableSprite(pygame.sprite.Sprite):
     def __init__(self, startpos, endpos, sprite_group):
         super().__init__(sprite_group)
         self.frames = []
@@ -27,6 +28,8 @@ class AnimatedSprite(pygame.sprite.Sprite):
         self.image = self.frames[self.cur_frame]
         self.pos_x = 0
         self.pos_y = 0
+        self.lives = 3
+        self.money = 0
 
     def handle_keys(self):
         key = pygame.key.get_pressed()
@@ -46,7 +49,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
         elif key[pygame.K_LEFT]:
             self.pos_x -= 1
             self.rect.x -= TILESIZE
-        if not pygame.sprite.spritecollideany(self, floor):
+        if (not pygame.sprite.spritecollideany(self, floor)) or (pygame.sprite.spritecollideany(self, mob_sprite)):
             self.pos_x = last_pos_x
             self.pos_y = last_pos_y
             self.rect.x = last_rect_x
@@ -61,6 +64,22 @@ class AnimatedSprite(pygame.sprite.Sprite):
         self.image = self.frames[self.cur_frame]
 
 
+class AnimatedMobSprite(pygame.sprite.Sprite):
+    def __init__(self, startpos, endpos, sprite_group):
+        super().__init__(sprite_group)
+        self.frames = []
+        for i in range(startpos, endpos + 1):
+            self.frames.append(load_image(f'{i}.png'))
+        self.cur_frame = 0
+        self.image = self.frames[self.cur_frame]
+        self.pos_x = 0
+        self.pos_y = 0
+
+    def update(self):
+        self.cur_frame = (self.cur_frame + 1) % len(self.frames)
+        self.image = self.frames[self.cur_frame]
+
+
 class Game:
     def __init__(self):
         pygame.init()
@@ -69,7 +88,7 @@ class Game:
         self.level = Level(self.display)
 
     def run(self):
-        player = AnimatedSprite(40, 47, player_sprite)
+        player = PlayerMovableSprite(40, 47, player_sprite)
         player.rect = player.image.get_rect()
         player_sprite.add(player)
         pos_x = WIDTH // TILESIZE
@@ -136,12 +155,32 @@ class Game:
             player.pos_y = cy
         player.rect.x = player.pos_x * TILESIZE
         player.rect.y = player.pos_y * TILESIZE
+        mobs_file = import_csv_layout('level/main_map1_Mobs.csv')
+        mobs_dict = dict(m1=(168, 176), m2=(296, 304), m3=(488, 496), m4=(695, 702), m5=(251, 254), m6=(627, 629),
+                         m7=(183, 190), m8=(530, 532))
         
+        for i in range(len(mobs_file)):
+            for j in range(len(mobs_file[i])):
+                if player.pos_x != i and player.pos_y != j and mobs_file[i][j] in mobs_dict.keys():
+                    mob = AnimatedMobSprite(mobs_dict[mobs_file[i][j]][0], mobs_dict[mobs_file[i][j]][1], mob_sprite)
+                    mob.rect = mob.image.get_rect()
+                    mob.pos_x = j
+                    mob.pos_y = i
+                    mob.rect.x = j * TILESIZE
+                    mob.rect.y = i * TILESIZE
+                    mob_sprite.add(mob)
+                    all_sprites.add(mob)
+        mob_sprite.draw(self.display)
         
         running = True
         self.level.update()
         self.level.run()
         player_sprite.draw(self.display)
+        pygame.display.flip()
+        heart = load_image('530.png')
+        coin = load_image('629.png')
+        pygame.mixer.music.load("sounds/bg2.mp3")
+        pygame.mixer.music.play(-1)
         while running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -153,6 +192,17 @@ class Game:
             self.level.run()
             player_sprite.draw(self.display)
             mob_sprite.draw(self.display)
+
+            font = pygame.font.Font(None, 50)
+            text1 = font.render(str(player.lives), True, (255, 255, 255))
+            text1_w = text1.get_width()
+            text1_h = text1.get_height()
+            self.display.blit(heart, (0, 0))
+            self.display.blit(text1, (32, 0))
+            text2 = font.render(str(player.money), True, (255, 255, 255))
+            self.display.blit(coin, (32+text1_w, 0))
+            self.display.blit(text2, (64+text1_w, 0))
+
             pygame.display.flip()
             self.clock.tick(15)
 
