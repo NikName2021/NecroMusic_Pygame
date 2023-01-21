@@ -1,0 +1,168 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "main_map.tmx",
+    "expandedProjectPaths": [
+        "venv",
+        "."
+    ],
+    "file.lastUsedOpenFilter": "Все файлы (*)",
+    "fileStates": {
+        "": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "#0x72_DungeonTilesetII_v1.3": {
+            "scaleInDock": 3
+        },
+        "#Sprite-0003": {
+            "scaleInDock": 1
+        },
+        "#Sprite-0004": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "#brian-gilman-new-tile-colorpalettev3": {
+            "scaleInDock": 1
+        },
+        "#drawn-pixel-art-ground-1": {
+            "scaleInEditor": 2
+        },
+        "#pixels-textures-for-games-vector-2951860": {
+            "scaleInEditor": 1
+        },
+        "1.tmx": {
+            "scale": 1.3427884615384615,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 320.6015037593985,
+                "y": 104.63301109917651
+            }
+        },
+        "1.tmx#DungeonTilesetII": {
+            "scaleInDock": 1
+        },
+        "1.tmx#Sprite-00042": {
+            "scaleInDock": 1
+        },
+        "1.tmx#Sprite-0005": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Admin/Downloads/pixel/kenney_tinydungeon/Tiled/sampleMap.tmx": {
+            "scale": 2,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 255.75,
+                "y": 159.75
+            }
+        },
+        "C:/Users/Admin/Downloads/pixel/kenney_tinydungeon/Tiled/sampleMap.tmx#Sprite-0003": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Admin/Downloads/pixel/kenney_tinydungeon/Tiled/sampleSheet.tsx": {
+            "scaleInDock": 3
+        },
+        "C:/Users/Admin/Downloads/pixel/безымянный.tmx": {
+            "scale": 2,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 360.75,
+                "y": 489
+            }
+        },
+        "C:/Users/Admin/Downloads/pixel/безымянный.tmx#Sprite-0003": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Admin/Downloads/pixel/безымянный.tmx#Sprite-0004": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "C:/Users/Admin/Downloads/pixel/безымянный.tmx#Sprite-00042": {
+            "scaleInDock": 2
+        },
+        "C:/Users/Admin/Downloads/pixel/безымянный.tmx#Sprite-0005": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Admin/Downloads/pixel/безымянный.tmx#drawn-pixel-art-ground-1": {
+            "scaleInDock": 2
+        },
+        "C:/Users/Admin/Downloads/pixel/безымянный.tmx#grown": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Admin/Downloads/pixel/безымянный.tmx#main": {
+            "scaleInDock": 2
+        },
+        "main_map..tmj": {
+            "scale": 0.6713942307692308,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 833.3404940923738,
+                "y": 577.157178660938
+            }
+        },
+        "main_map..tmj#main": {
+            "scaleInDock": 1
+        },
+        "main_map.tmx": {
+            "expandedObjectLayers": [
+                3
+            ],
+            "scale": 0.5,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 1075,
+                "y": 803
+            }
+        },
+        "main_map.tmx#main": {
+            "scaleInDock": 1
+        },
+        "безымянный.tmx": {
+            "scale": 2,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 329.25,
+                "y": 164.25
+            }
+        },
+        "безымянный.tmx#DungeonTilesetII": {
+            "scaleInDock": 3
+        },
+        "безымянный.tmx#Sprite-00042": {
+            "scaleInDock": 1
+        },
+        "безымянный.tmx#Sprite-0005": {
+            "scaleInDock": 1
+        }
+    },
+    "last.exportedFilePath": "C:/python/necrotic_music_game/level",
+    "last.externalTilesetPath": "C:/Users/Admin/Downloads/pixel",
+    "last.imagePath": "C:/Users/Admin/Downloads/pixel/0x72_DungeonTilesetII_v1.3.1/0x72_DungeonTilesetII_v1.3.1",
+    "map.height": 36,
+    "map.lastUsedExportFilter": "CSV файлы (*.csv)",
+    "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 32,
+    "map.tileWidth": 32,
+    "map.width": 52,
+    "openFiles": [
+        "main_map.tmx"
+    ],
+    "project": "necrotic.tiled-project",
+    "recentFiles": [
+        "main_map.tmx",
+        "main_map..tmj",
+        "1.tmx",
+        "C:/Users/Admin/Downloads/pixel/kenney_tinydungeon/Tiled/sampleMap.tmx",
+        "безымянный.tmx",
+        "C:/Users/Admin/Downloads/pixel/безымянный.tmx"
+    ],
+    "tileset.embedInMap": true,
+    "tileset.lastUsedFilter": "Все файлы (*)",
+    "tileset.margin": 0,
+    "tileset.tileSize": {
+        "height": 32,
+        "width": 32
+    }
+}
