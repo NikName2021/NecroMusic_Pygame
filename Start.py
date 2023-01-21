@@ -25,7 +25,7 @@ def file_difficulty():
     return difficults[dif]
 
 
-menu = pygame_menu.Menu('Necrotic Music', 400, 300,
+menu = pygame_menu.Menu('Crazy Dungeons', 400, 300,
                         theme=pygame_menu.themes.THEME_BLUE)
 menu.add.button('Играть', start_the_game)
 menu.add.button('Выйти', pygame_menu.events.EXIT)

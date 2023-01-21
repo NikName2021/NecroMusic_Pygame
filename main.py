@@ -1,4 +1,5 @@
 import pygame
+import random
 
 from settings import *
 from Level import Level, floor, wall, danger_blocks, health, all_sprites
@@ -20,16 +21,6 @@ def repos(lx, nx, ly, ny):
     for sprite in all_sprites:
         sprite.rect.x -= dx
         sprite.rect.y -= dy
-
-
-def pos_check(sprite):
-    m = [(sprite.pos_x - 1, sprite.pos_y - 1), (sprite.pos_x - 1, sprite.pos_y), (sprite.pos_x - 1, sprite.pos_y + 1),
-         (sprite.pos_x, sprite.pos_y + 1), (sprite.pos_x + 1, sprite.pos_y + 1), (sprite.pos_x + 1, sprite.pos_y),
-         (sprite.pos_x + 1, sprite.pos_y - 1), (sprite.pos_x, sprite.pos_y - 1)]
-    # for i in m:
-    #     print('err')
-        # if str(mobs_file[i[0]][i[1]][0]) == 'm':
-        #     sprite.lives -= 1
 
 
 class PlayerMovableSprite(pygame.sprite.Sprite):
@@ -65,11 +56,16 @@ class PlayerMovableSprite(pygame.sprite.Sprite):
         elif key[pygame.K_LEFT]:
             self.pos_x -= 1
             self.rect.x -= TILESIZE
-        if (not pygame.sprite.spritecollideany(self, floor)) or pygame.sprite.spritecollideany(self, mob_sprite):
+        if not pygame.sprite.spritecollideany(self, floor):
             self.pos_x = last_pos_x
             self.pos_y = last_pos_y
             self.rect.x = last_rect_x
             self.rect.y = last_rect_y
+        if pygame.sprite.spritecollideany(self, mob_sprite):
+            self.lives -= 1
+            damage.play()
+            self.points -= NEGATIVE_FOR_BLOCK
+            self.event = False
         if pygame.sprite.spritecollideany(self, danger_blocks) and self.event:
             self.lives -= 1
             damage.play()
@@ -104,7 +100,6 @@ class PlayerMovableSprite(pygame.sprite.Sprite):
         self.handle_keys()
         self.cur_frame = (self.cur_frame + 1) % len(self.frames)
         self.image = self.frames[self.cur_frame]
-        pos_check(self)
 
 
 class AnimatedMobSprite(pygame.sprite.Sprite):
@@ -117,12 +112,44 @@ class AnimatedMobSprite(pygame.sprite.Sprite):
         self.image = self.frames[self.cur_frame]
         self.pos_x = 0
         self.pos_y = 0
+        self.go = 1
+        self.dir = random.randint(1, 2)
+        self.move = 1
+        self.live = 3
+
+    def minus(self, x, y):
+        if self.rect.collidepoint(x, y):
+            self.live -= 1
+            if self.live < 1:
+                self.kill()
+                return True
+            return False
 
     def update(self):
         self.cur_frame = (self.cur_frame + 1) % len(self.frames)
         self.image = self.frames[self.cur_frame]
-        if pygame.sprite.spritecollideany(self, player_sprite):
-            print(123)
+        if self.move == 1:
+            if self.dir == 1:
+                last_pos_x = self.pos_x
+                last_rect_x = self.rect.x
+                self.pos_x += self.go
+                self.rect.x += self.go * TILESIZE
+                if (not pygame.sprite.spritecollideany(self, floor)) or pygame.sprite.spritecollideany(self,
+                                                                                                       danger_blocks):
+                    self.pos_x = last_pos_x
+                    self.rect.x = last_rect_x
+                    self.go *= -1
+            else:
+                last_pos_y = self.pos_y
+                last_rect_y = self.rect.y
+                self.pos_y += self.go
+                self.rect.y += self.go * TILESIZE
+                if (not pygame.sprite.spritecollideany(self, floor)) or pygame.sprite.spritecollideany(self,
+                                                                                                       danger_blocks):
+                    self.pos_y = last_pos_y
+                    self.rect.y = last_rect_y
+                    self.go *= -1
+        self.move *= -1
 
 
 class Game:
@@ -219,6 +246,8 @@ class Game:
                     all_sprites.add(mob)
         mob_sprite.draw(self.display)
 
+        count = False
+
         self.level.update()
         self.level.run()
         player_sprite.draw(self.display)
@@ -229,14 +258,27 @@ class Game:
                 if event.type == pygame.QUIT:
                     self.running = False
                     self.music.stop()
-            if player.lives == 0:
-                # pic = load_image('game_over.png', path='layouts')
-                # self.display.blit(pygame.transform.scale(pic, (WIDTH, HEIGHT)), (0, 0))
-                # pygame.display.flip()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    x, y = event.pos
+                    for i in mob_sprite:
+                        if i.minus(x, y):
+                            player.points += NEGATIVE_FOR_BLOCK
+
+            if len(mob_sprite.sprites()) == 0:
+                for i in all_sprites:
+                    i.kill()
                 self.display.fill((0, 0, 0))
                 pygame.display.flip()
                 self.music.stop()
                 return 1
+
+            if player.lives == 0:
+                for i in all_sprites:
+                    i.kill()
+                self.display.fill((0, 0, 0))
+                pygame.display.flip()
+                self.music.stop()
+                return 1 
 
             player_sprite.update()
             mob_sprite.update()
