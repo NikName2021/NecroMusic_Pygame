@@ -6,6 +6,8 @@ from settings import *
 from connection import con, cur
 
 pygame.init()
+with open('volume.txt', 'w', encoding='UTF-8') as file:
+    file.write('50')
 surface = pygame.display.set_mode((WIDTH, HEIGHT))
 
 
@@ -26,6 +28,11 @@ def file():
 def set_difficulty(value, difficulty):
     with open('setting.txt', 'w', encoding='UTF-8') as file:
         file.write(str(difficulty))
+
+
+def set_volume(value, volume):
+    with open('volume.txt', 'w', encoding='UTF-8') as file:
+        file.write(str(volume))
 
 
 def set_map(value, difficulty):
@@ -49,12 +56,15 @@ def record():
         return 0
 
 
-menu = pygame_menu.Menu('Crazy Dungeons', 400, 300,
+menu = pygame_menu.Menu('Crazy Dungeons', 500, 400,
                         theme=pygame_menu.themes.THEME_BLUE)
 menu.add.button('Играть', start_the_game)
 menu.add.button('Выйти', pygame_menu.events.EXIT)
 menu.add.selector('Сложность :',
                   [(key, name) for name, key in difficults.items()], onchange=set_difficulty).set_value(file_difficulty())
+menu.add.selector('Громкость музыки :',
+                  [('Нет', 0), ('10%', 10), ('20%', 20), ('30%', 30), ('40%', 40), ('50%', 50), ('60%', 60),
+                   ('70%', 70), ('80%', 80), ('90%', 90), ('100%', 100)], onchange=set_volume).set_value(5)
 
 # menu.add.selector('Уровень :',
 #                   [(key, name) for name, key in MAPS.items()], onchange=set_map).set_value(map_value())
