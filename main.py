@@ -14,6 +14,7 @@ player_sprite = pygame.sprite.Group()
 mob_sprite = pygame.sprite.Group()
 mobs_file = import_csv_layout('level/main_map1_Mobs.csv')
 damage = pygame.mixer.Sound('layouts/hit3.mp3')
+attack = pygame.mixer.Sound('layouts/attack.wav')
 
 
 def repos(lx, nx, ly, ny):
@@ -123,8 +124,8 @@ class AnimatedMobSprite(pygame.sprite.Sprite):
             self.live -= 1
             if self.live < 1:
                 self.kill()
-                return True
-            return False
+                return 'kill'
+            return 'live'
 
     def update(self):
         self.cur_frame = (self.cur_frame + 1) % len(self.frames)
@@ -262,8 +263,11 @@ class Game:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     x, y = event.pos
                     for i in mob_sprite:
-                        if i.minus(x, y):
+                        if i.minus(x, y) == 'kill':
                             player.points += NEGATIVE_FOR_BLOCK
+                            attack.play()
+                        elif i.minus(x, y) == 'live':
+                            attack.play()
 
             if len(mob_sprite.sprites()) == 0:
                 if reset:
