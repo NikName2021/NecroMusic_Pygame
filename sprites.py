@@ -58,11 +58,6 @@ class PlayerMovableSprite(pygame.sprite.Sprite):
             self.pos_y = last_pos_y
             self.rect.x = last_rect_x
             self.rect.y = last_rect_y
-        if pygame.sprite.spritecollideany(self, mob_sprite):
-            self.lives -= 1
-            damage.play()
-            self.points -= NEGATIVE_FOR_BLOCK
-            self.event = False
         if pygame.sprite.spritecollideany(self, danger_blocks) and self.event:
             self.lives -= 1
             damage.play()
@@ -131,8 +126,8 @@ class AnimatedMobSprite(pygame.sprite.Sprite):
                 last_rect_x = self.rect.x
                 self.pos_x += self.go
                 self.rect.x += self.go * TILESIZE
-                if (not pygame.sprite.spritecollideany(self, floor)) or pygame.sprite.spritecollideany(self,
-                                                                                                       danger_blocks):
+                if (not pygame.sprite.spritecollideany(self, floor)) or \
+                        pygame.sprite.spritecollideany(self, danger_blocks):
                     self.pos_x = last_pos_x
                     self.rect.x = last_rect_x
                     self.go *= -1
@@ -141,11 +136,17 @@ class AnimatedMobSprite(pygame.sprite.Sprite):
                 last_rect_y = self.rect.y
                 self.pos_y += self.go
                 self.rect.y += self.go * TILESIZE
-                if (not pygame.sprite.spritecollideany(self, floor)) or pygame.sprite.spritecollideany(self,
-                                                                                                       danger_blocks):
+                if (not pygame.sprite.spritecollideany(self, floor)) or \
+                        pygame.sprite.spritecollideany(self, danger_blocks):
                     self.pos_y = last_pos_y
                     self.rect.y = last_rect_y
                     self.go *= -1
+            if pygame.sprite.spritecollideany(self, player_sprite):
+                for i in player_sprite:
+                    i.lives -= 1
+                    damage.play()
+                    i.points -= NEGATIVE_FOR_BLOCK
+                    i.event = False
         self.c += 1
 
 
@@ -197,4 +198,10 @@ class AnimatedBossSprite(pygame.sprite.Sprite):
                     self.pos_y = last_pos_y
                     self.rect.y = last_rect_y
                     self.go *= -1
+            if pygame.sprite.spritecollideany(self, player_sprite):
+                for i in player_sprite:
+                    i.lives -= 1
+                    damage.play()
+                    i.points -= NEGATIVE_FOR_BLOCK
+                    i.event = False
         self.c += 1

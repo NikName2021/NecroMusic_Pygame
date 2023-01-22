@@ -104,7 +104,7 @@ class Game:
                     mob_sprite.add(mob)
                     all_sprites.add(mob)
                 elif player.pos_x != i and player.pos_y != j and mobs_file[i][j] == 'm22':
-                    mob = AnimatedBossSprite(296, 304, mob_sprite)
+                    mob = AnimatedBossSprite(503, 510, mob_sprite)
                     mob.rect = mob.image.get_rect()
                     mob.pos_x = j
                     mob.pos_y = i
