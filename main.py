@@ -8,7 +8,6 @@ from Sound import Sound
 from Header import Header
 from connection import con, cur
 from sprites import *
-pygame.init()
 
 
 class Game:
@@ -175,6 +174,8 @@ class Game:
 
     def killer(self):
         for i in all_sprites:
+            i.kill()
+        for i in player_sprite:
             i.kill()
 
     def save_result(self, player):

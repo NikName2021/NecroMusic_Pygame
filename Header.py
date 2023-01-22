@@ -18,9 +18,6 @@ class Header:
         text1_h = text1.get_height()
         display.blit(self.heart, (0, 0))
         display.blit(text1, (32, 0))
-        text2 = font.render(str(self.player.money), True, (255, 255, 255))
+        text2 = font.render(str(self.player.points), True, (255, 255, 255))
         display.blit(self.coin, (32 + text1_w, 0))
         display.blit(text2, (64 + text1_w, 0))
-
-        points = font.render(str(self.player.points), True, (255, 255, 255))
-        display.blit(points, (WIDTH - 64, 5))
